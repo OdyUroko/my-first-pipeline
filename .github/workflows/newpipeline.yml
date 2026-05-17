@@ -1,9 +1,11 @@
-name: Run Tests
+name: Test and Conditional Deploy
 
 on:
   push:
     branches:
       - main
+      - develop
+      - 'feature/**'
 
   pull_request:
     branches:
@@ -16,15 +18,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Install pytest
-        run: pip install pytest
+      - run: pip install pytest
 
-      - name: Run all tests
-        run: pytest test_calculator.py -v
+      - run: pytest -v
+        # runs on ALL branches
 
-# -v means verbose -- print each test name as it runs
+  deploy:
+    runs-on: ubuntu-latest
+
+    needs: test
+    # only start if 'test' job passed
+
+    if: github.ref == 'refs/heads/main'
+    # only deploy from main
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Simulate deployment
+        run: |
+          echo "Tests passed on main branch!"
+          echo "Deploying application..."
+          echo "Deployment complete!"
+
