@@ -1,0 +1,20 @@
+name: Hello World Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Say Hello
+        run: echo "Hello from GitHub Actions!"
+
+      - name: Show runner info
+        run: |
+          echo "Running on:" $(uname -a)
+          echo "Current directory:" $(pwd)
+          echo "Pipeline finished successfully!"
